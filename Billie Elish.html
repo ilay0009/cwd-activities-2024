@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Billie Eilish</title>
+
+    <!-- Font Awesome, Google Fonts, Materialize CSS -->
+    <script src="https://kit.fontawesome.com/a71dfac3c4.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Custom Styling -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #0e0e0e;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navigation */
+        nav {
+            background-color: black;
+            font-weight: 600;
+        }
+        .nav-wrapper a.brand-logo {
+            color: #c7f904;
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.8rem;
+        }
+        .nav-wrapper ul a {
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 90vh;
+            background: url('images/billie.png') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            color: white;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+        }
+        .hero h1 {
+            font-size: 4rem;
+            letter-spacing: 1.5px;
+            color: #00FF00;
+        }
+        .hero p {
+            font-size: 1.5rem;
+            margin-top: 10px;
+        }
+        .hero .btn-large {
+            background-color: #00FF00;
+            border-radius: 25px;
+            padding: 12px 30px;
+        }
+
+        /* Section Titles */
+        h2 {
+            color: #00FF00;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* About Section */
+        .about {
+            background-color: #121212;
+            padding: 50px 0;
+            text-align: center;
+        }
+        .about img {
+            max-width: 60%;
+            border-radius: 10px;
+            border: 3px solid #00FF00;
+            margin: 20px 0;
+        }
+        .about p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: auto;
+        }
+
+        /* Music Section */
+        .music .card {
+            background-color: #121212;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .music .card-title {
+            color: #00FF00;
+            font-weight: bold;
+        }
+        .music .card-content p {
+            color: #d3d3d3;
+        }
+        .music .btn {
+            background-color: #00FF00;
+            border-radius: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #121212;
+            color: white;
+            padding: 20px;
+            border-top: 3px solid #00FF00;
+            text-align: center;
+        }
+
+        /* Floating Action Button */
+        .fixed-action-btn {
+            bottom: 45px;
+            right: 24px;
+        }
+        .fixed-action-btn a {
+            background-color: #00FF00;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-wrapper container">
+            <a href="#" class="brand-logo">Billie Eilish</a>
+            <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+            <ul class="right hide-on-med-and-down">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#profile">About</a></li>
+                <li><a href="#discography">Discography</a></li>
+                <li><a href="https://www.billieeilish.com/" target="_blank">Collections</a></li>
+                <!-- Social Media Dropdown -->
+                <li><a class="dropdown-trigger" href="#!" data-target="social-dropdown">Socials<i class="material-icons right"></i></a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Social Media Dropdown Structure -->
+    <ul id="social-dropdown" class="dropdown-content">
+        <li><a href="https://www.instagram.com/billieeilish" target="_blank" class="black-text"><i class="fab fa-instagram"></i> Instagram</a></li>
+        <li><a href="https://twitter.com/billieeilish" target="_blank" class="black-text"><i class="fab fa-twitter"></i> Twitter</a></li>
+        <li><a href="https://www.youtube.com/channel/UCiGm_E4ZwYSHV3bcW1pnSeQ" target="_blank" class="black-text"><i class="fab fa-youtube"></i> YouTube</a></li>
+        <li><a href="https://www.tiktok.com/@billieeilish" target="_blank" class="black-text"><i class="fab fa-tiktok"></i> TikTok</a></li>
+    </ul>
+
+    <!-- Sidenav for Mobile -->
+    <ul class="sidenav black" id="mobile-demo">
+        <li><a href="#home" class="white-text">Home</a></li>
+        <li><a href="#profile" class="white-text">About</a></li>
+        <li><a href="#discography" class="white-text">Discography</a></li>
+        <li><a href="https://www.billieeilish.com/" target="_blank" class="white-text">Collections</a></li>
+        <!-- Social Media Links for Mobile -->
+        <li><a href="https://www.instagram.com/billieeilish" target="_blank" class="white-text"><i class="fab fa-instagram"></i> Instagram</a></li>
+        <li><a href="https://twitter.com/billieeilish" target="_blank" class="white-text"><i class="fab fa-twitter"></i> Twitter</a></li>
+        <li><a href="https://www.youtube.com/channel/UCiGm_E4ZwYSHV3bcW1pnSeQ" target="_blank" class="white-text"><i class="fab fa-youtube"></i> YouTube</a></li>
+        <li><a href="https://www.tiktok.com/@billieeilish" target="_blank" class="white-text"><i class="fab fa-tiktok"></i> TikTok</a></li>
+    </ul>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <h1>Billie Eilish</h1>
+            <p>Innovative, Bold, Iconic</p>
+            <a href="#profile" class="btn-large">Learn More</a>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="profile" class="about">
+        <h2>About Billie Eilish</h2>
+        <img src="images/billie-eilish.png" alt="Billie Eilish Image">
+        <p>Billie Eilish is an American singer-songwriter known for her unique style blending alternative pop, electro-pop, and indie pop. She first gained attention with her debut single "Ocean Eyes" and quickly became a global music icon.</p>
+    </section>
+
+    <!-- Discography Section -->
+    <section id="discography" class="music container">
+        <h2>Discography</h2>
+        <div class="row">
+            <div class="col s12 m6 l4">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/album1.png" alt="When We All Fall Asleep, Where Do We Go?">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title">When We All Fall Asleep, Where Do We Go?</span>
+                        <p>Released: 2019</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://open.spotify.com/album/0S0KGZnfBGSIssfF54WSJh?si=RKZQEPgaSsKQDEA-ltCS0A" target="_blank" class="btn">Listen Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l4">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/album3.png" alt="Happier Than Ever">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title">Happier Than Ever</span>
+                        <p>Released: 2021</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://open.spotify.com/album/0JGOiO34nwfUdDrD612dOp?si=1iN02jVYQGyZ-ULuwfpSLg" target="_blank" class="btn">Listen Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col s12 m6 l4">
+                <div class="card">
+                    <div class="card-image">
+                        <img src="images/album2.png" alt="Hit Me Hard and Soft">
+                    </div>
+                    <div class="card-content">
+                        <span class="card-title">Hit Me Hard and Soft</span>
+                        <p>Released: 2024</p>
+                    </div>
+                    <div class="card-action">
+                        <a href="https://open.spotify.com/album/7aJuG4TFXa2hmE4z1yxc3n?si=JWAToW4RROaf_hoiobvQ9g" target="_blank" class="btn">Listen Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Listen Section -->
+<section id="listen" class="music container">
+    <h2>Listen</h2>
+    <p style="text-align: center;">Enjoy some popular tracks by Billie Eilish.</p>
+    <div class="row">
+        <!-- Track 1 -->
+        <div class="col s12 m6 l4">
+            <iframe src="https://open.spotify.com/embed/track/4RVwu0g32PAqgUiJoXsdF8" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            <p class="center-align">Happier Than Ever</p>
+        </div>
+        <!-- Track 2 -->
+        <div class="col s12 m6 l4">
+            <iframe src="https://open.spotify.com/embed/track/2Fxmhks0bxGSBdJ92vM42m" width="100%" height="80" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+            <p class="center-align">Bad Guy</p>
+        </div>
+        <!-- Track 3 -->
+        <div class="col s12 m6 l4">
+            <iframe src="https://open.spotify.com/embed/track/7BRD7x5pt8Lqa1eGYC4dzj?utm_source=generator" width="100%" height="80" frameBorder="0" allowtransparecy="true" allow="encryted-media"></iframe>
+            <p class="center-align">CHIHIRO</p>
+        </div>
+    </div>
+</section>
+
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Billie Eilish Fansite. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Floating Action Button -->
+    <div class="fixed-action-btn">
+        <a href="#top" class="btn-floating btn-large"><i class="fa-solid fa-angles-up"></i></a> 
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.sidenav').sidenav();
+            $('.dropdown-trigger').dropdown();
+        });
+    </script>
+</body>
+</html>
+
