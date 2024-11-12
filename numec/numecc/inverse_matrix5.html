@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Calculator - Inverse and Determinant</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f0f4f8, #e1e8ed);
+            color: #333;
+        }
+
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            max-width: 700px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h2 {
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        label, select {
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        select {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .matrix-container, .results-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .matrix-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .matrix-cell {
+            width: 60px;
+            margin: 0 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #357ABD;
+        }
+
+        .result {
+            margin-top: 10px;
+            text-align: left;
+        }
+
+        .result-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+            margin: 10px 0 5px;
+        }
+
+        .solution-step {
+            font-size: 14px;
+            color: #666;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Matrix Calculator</h2>
+
+        <label for="matrixSize">Choose Matrix Size:</label>
+        <select id="matrixSize" onchange="generateMatrix()">
+            <option value="">Select size</option>
+            <option value="1x1">1x1</option>
+            <option value="1x2">1x2</option>
+            <option value="1x3">1x3</option>
+            <option value="1x4">1x4</option>
+            <option value="2x1">2x1</option>
+            <option value="2x2">2x2</option>
+            <option value="2x3">2x3</option>
+            <option value="2x4">2x4</option>
+            <option value="3x1">3x1</option>
+            <option value="3x2">3x2</option>
+            <option value="3x3">3x3</option>
+            <option value="3x4">3x4</option>
+            <option value="4x1">4x1</option>
+            <option value="4x2">4x2</option>
+            <option value="4x3">4x3</option>
+            <option value="4x4">4x4</option>
+        </select>
+
+        <div id="matrixContainer" class="matrix-container"></div>
+
+        <button onclick="calculate()">Calculate</button>
+
+        <div class="results-container">
+            <div class="result">
+                <div class="result-title">Determinant:</div>
+                <p id="determinant"></p>
+            </div>
+            <div class="result">
+                <div class="result-title">Inverse:</div>
+                <p id="inverse"></p>
+            </div>
+            <div class="result">
+                <div class="result-title">Solution Steps:</div>
+                <p id="solution" class="solution-step"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.1.1/math.min.js"></script>
+    <script>
+        function generateMatrix() {
+            const matrixSize = document.getElementById("matrixSize").value;
+            const [rows, cols] = matrixSize.split("x").map(Number);
+            const matrixContainer = document.getElementById("matrixContainer");
+
+            matrixContainer.innerHTML = ""; // Clear any existing fields
+
+            for (let i = 0; i < rows; i++) {
+                const rowDiv = document.createElement("div");
+                rowDiv.className = "matrix-row";
+
+                for (let j = 0; j < cols; j++) {
+                    const cellInput = document.createElement("input");
+                    cellInput.type = "number";
+                    cellInput.className = "matrix-cell";
+                    cellInput.id = `cell-${i}-${j}`;
+                    cellInput.placeholder = `a${i+1}${j+1}`;
+                    rowDiv.appendChild(cellInput);
+                }
+
+                matrixContainer.appendChild(rowDiv);
+            }
+        }
+
+        function calculate() {
+            const matrixSize = document.getElementById("matrixSize").value;
+            if (!matrixSize) {
+                alert("Please select a matrix size.");
+                return;
+            }
+
+            const [rows, cols] = matrixSize.split("x").map(Number);
+
+            if (rows === 1 && cols === 1) {
+                const value = parseFloat(document.getElementById("cell-0-0").value) || 0;
+                document.getElementById("determinant").innerText = value.toFixed(2);
+                document.getElementById("inverse").innerText = `Inverse: 1 / ${value} = ${(1 / value).toFixed(2)}`;
+                document.getElementById("solution").innerText = `Determinant of 1x1 matrix is the single element: ${value}`;
+                return;
+            }
+
+            if (rows !== cols) {
+                document.getElementById("determinant").innerText = `Determinant is not defined for a ${rows}x${cols} matrix.`;
+                document.getElementById("inverse").innerText = "";
+                document.getElementById("solution").innerText = "";
+                return;
+            }
+
+            const matrix = [];
+            for (let i = 0; i < rows; i++) {
+                const row = [];
+                for (let j = 0; j < cols; j++) {
+                    const value = parseFloat(document.getElementById(`cell-${i}-${j}`).value) || 0;
+                    row.push(value);
+                }
+                matrix.push(row);
+            }
+
+            try {
+                const numericMatrix = math.matrix(matrix);
+                const determinant = math.det(numericMatrix);
+                document.getElementById("determinant").innerText = determinant.toFixed(2);
+                document.getElementById("solution").innerText = calculateDeterminantSteps(matrix);
+
+                if (determinant !== 0) {
+                    const inverseMatrix = math.inv(numericMatrix);
+                    document.getElementById("inverse").innerText = matrixToString(inverseMatrix);
+                    document.getElementById("solution").innerText += "\n\n" + calculateInverseSteps(matrix);
+                } else {
+                    document.getElementById("inverse").innerText = "This matrix is singular and cannot be inverted.";
+                }
+            } catch (error) {
+                document.getElementById("determinant").innerText = "Error in calculation.";
+                document.getElementById("inverse").innerText = "";
+                document.getElementById("solution").innerText = "";
+            }
+        }
+
+        function matrixToString(matrix) {
+            return matrix._data.map(row => row.map(val => val.toFixed(2)).join(" ")).join("\n");
+        }
+
+        function calculateDeterminantSteps(matrix) {
+            const rows = matrix.length;
+
+            if (rows === 1) {
+                return `Determinant of 1x1 matrix is the single element: (${matrix[0][0]})`;
+            }
+
+            if (rows === 2) {
+                const a11 = matrix[0][0], a12 = matrix[0][1];
+                const a21 = matrix[1][0], a22 = matrix[1][1];
+                const determinant = a11 * a22 - a12 * a21;
+                return `Determinant of 2x2 matrix:\n (a11 * a22) - (a12 * a21) = (${a11} * ${a22}) - (${a12} * ${a21}) = ${determinant}`;
+            }
+
+            if (rows === 3) {
+                const [a, b, c] = matrix;
+                const step1 = a[0] * (b[1] * c[2] - b[2] * c[1]);
+                const step2 = -a[1] * (b[0] * c[2] - b[2] * c[0]);
+                const step3 = a[2] * (b[0] * c[1] - b[1] * c[0]);
+                const determinant = step1 + step2 + step3;
+                
+                return `Determinant of 3x3 matrix:\n
+                a11(a22 * a33 - a23 * a32) - a12(a21 * a33 - a23 * a31) + a13(a21 * a32 - a22 * a31)\n
+                = (${a[0]})[(${b[1]} * ${c[2]}) - (${b[2]} * ${c[1]})] - (${a[1]})[(${b[0]} * ${c[2]}) - (${b[2]} * ${c[0]})] + (${a[2]})[(${b[0]} * ${c[1]}) - (${b[1]} * ${c[0]})]\n
+                = ${determinant}`;
+            }
+
+            if (rows === 4) {
+                const steps = [
+                    `Calculating the determinant of a 4x4 matrix using cofactor expansion along the first row:\n`,
+                    `det(A) = a11 * det(M11) - a12 * det(M12) + a13 * det(M13) - a14 * det(M14)\n`,
+                    `Where:\n`,
+                    `M11, M12, M13, M14 are the 3x3 minors obtained by deleting the first row and respective columns.\n`,
+                    `For the matrix:\n`,
+                    `| ${matrix[0][0]} ${matrix[0][1]} ${matrix[0][2]} ${matrix[0][3]} |\n`,
+                    `| ${matrix[1][0]} ${matrix[1][1]} ${matrix[1][2]} ${matrix[1][3]} |\n`,
+                    `| ${matrix[2][0]} ${matrix[2][1]} ${matrix[2][2]} ${matrix[2][3]} |\n`,
+                    `| ${matrix[3][0]} ${matrix[3][1]} ${matrix[3][2]} ${matrix[3][3]} |\n`,
+                    `We calculate the minors:\n`
+                ];
+
+                const minors = [];
+                for (let j = 0; j < 4; j++) {
+                    const minor = matrix.map(row => row.filter((_, colIndex) => colIndex !== j)).slice(1); // Remove first row and j-th column
+                    const minorDet = math.det(math.matrix(minor));
+                    minors.push(minorDet);
+                    steps.push(`M${j + 1}: Det of minor excluding row 1 and column ${j + 1} = ${minorDet.toFixed(2)}\n`);
+                }
+
+                // Final determinant calculation
+                const determinant = 
+                    matrix[0][0] * minors[0] -
+                    matrix[0][1] * minors[1] +
+                    matrix[0][2] * minors[2] -
+                    matrix[0][3] * minors[3];
+                
+                steps.push(`Final Det(A) = ${determinant.toFixed(2)}`);
+
+                return steps.join('');
+            }
+
+            return "Solution steps for determinants larger than 4x4 are not displayed.";
+        }
+
+        function calculateInverseSteps(matrix) {
+            const rows = matrix.length;
+
+            if (rows === 2) {
+                const a11 = matrix[0][0], a12 = matrix[0][1];
+                const a21 = matrix[1][0], a22 = matrix[1][1];
+                const determinant = a11 * a22 - a12 * a21;
+                return `Inverse of 2x2 matrix:\n\n` +
+                    `1 / det(A) * | a22 -a12 |\n` +
+                    `                 | -a21 a11 |\n\n` +
+                    `Where det(A) = ${determinant.toFixed(2)}.\n` +
+                    `Therefore:\n` +
+                    `Inverse = (1 / ${determinant.toFixed(2)}) * | ${a22} ${-a12} |\n` +
+                    `                               | ${-a21} ${a11} |\n`;
+            }
+
+            if (rows === 3) {
+                const a = matrix;
+                const determinant = math.det(math.matrix(matrix));
+                const adjugate = [
+                    [
+                        (a[1][1] * a[2][2] - a[1][2] * a[2][1]),
+                        -(a[1][0] * a[2][2] - a[1][2] * a[2][0]),
+                        (a[1][0] * a[2][1] - a[1][1] * a[2][0])
+                    ],
+                    [
+                        -(a[0][1] * a[2][2] - a[0][2] * a[2][1]),
+                        (a[0][0] * a[2][2] - a[0][2] * a[2][0]),
+                        -(a[0][0] * a[2][1] - a[0][1] * a[2][0])
+                    ],
+                    [
+                        (a[0][1] * a[1][2] - a[0][2] * a[1][1]),
+                        -(a[0][0] * a[1][2] - a[0][2] * a[1][0]),
+                        (a[0][0] * a[1][1] - a[0][1] * a[1][0])
+                    ]
+                ];
+                
+                return `Inverse of 3x3 matrix:\n\n` +
+                    `1 / det(A) * Adjugate(A)\n\n` +
+                    `Where det(A) = ${determinant.toFixed(2)} and Adjugate(A) is:\n` +
+                    `| ${adjugate[0].join(' ')} |\n` +
+                    `| ${adjugate[1].join(' ')} |\n` +
+                    `| ${adjugate[2].join(' ')} |\n`;
+            }
+
+            if (rows === 4) {
+                const determinant = math.det(math.matrix(matrix));
+                if (determinant === 0) {
+                    return "This matrix is singular and cannot be inverted.";
+                }
+                
+                const adjugate = math.inv(math.matrix(matrix)).map(row => row.map(val => val * determinant));
+                
+                return `Inverse of 4x4 matrix:\n\n` +
+                    `1 / det(A) * Adjugate(A)\n\n` +
+                    `Where det(A) = ${determinant.toFixed(2)} and Adjugate(A) is:\n` +
+                    `${matrixToString(adjugate)}\n\n` +
+                    `Therefore:\n` +
+                    `Inverse = (1 / ${determinant.toFixed(2)}) * Adjugate(A)\n`;
+            }
+
+            return "Solution steps for inverses larger than 4x4 are not displayed.";
+        }
+    </script>
+</body>
+</html>
+

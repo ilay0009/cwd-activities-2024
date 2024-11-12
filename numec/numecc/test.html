@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Calculator - Inverse and Determinant</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+        h2 {
+            color: #4a90e2;
+        }
+        label, select {
+            font-weight: bold;
+            color: #555;
+        }
+        select {
+            padding: 5px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        .matrix-row {
+            display: flex;
+            justify-content: center;
+        }
+        .matrix-cell {
+            width: 60px;
+            margin: 5px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4a90e2;
+            color: #fff;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background-color: #357ABD;
+        }
+        .result {
+            margin-top: 10px;
+            text-align: left;
+        }
+        .result-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 18px;
+            margin: 10px 0 5px;
+        }
+        .solution-step {
+            font-size: 14px;
+            color: #666;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        .matrix {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Matrix Calculator</h2>
+
+        <label for="matrixSize">Choose Matrix Size:</label>
+        <select id="matrixSize" onchange="generateMatrix()">
+            <option value="">Select size</option>
+            <option value="1x1">1x1</option>
+            <option value="1x2">1x2</option>
+            <option value="1x3">1x3</option>
+            <option value="1x4">1x4</option>
+            <option value="2x1">2x1</option>
+            <option value="2x2">2x2</option>
+            <option value="2x3">2x3</option>
+            <option value="2x4">2x4</option>
+            <option value="3x1">3x1</option>
+            <option value="3x2">3x2</option>
+            <option value="3x3">3x3</option>
+            <option value="3x4">3x4</option>
+            <option value="4x1">4x1</option>
+            <option value="4x2">4x2</option>
+            <option value="4x3">4x3</option>
+            <option value="4x4">4x4</option>
+        </select>
+
+        <div id="matrixContainer" class="matrix-container"></div>
+
+        <button onclick="calculate()">Calculate</button>
+
+        <div class="result">
+            <div class="result-title">Determinant:</div>
+            <p id="determinant"></p>
+        </div>
+        <div class="result">
+            <div class="result-title">Inverse:</div>
+            <div id="inverse" class="matrix"></div>
+        </div>
+        <div class="result">
+            <div class="result-title">Determinant Steps:</div>
+            <div id="determinantSteps" class="solution-step"></div>
+        </div>
+        <div class="result">
+            <div class="result-title">Inverse Steps:</div>
+            <div id="inverseSteps" class="solution-step"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.1.1/math.min.js"></script>
+    <script>
+        function generateMatrix() {
+            const matrixSize = document.getElementById("matrixSize").value;
+            const [rows, cols] = matrixSize.split("x").map(Number);
+            const matrixContainer = document.getElementById("matrixContainer");
+
+            matrixContainer.innerHTML = ""; // Clear existing fields
+
+            for (let i = 0; i < rows; i++) {
+                const rowDiv = document.createElement("div");
+                rowDiv.className = "matrix-row";
+
+                for (let j = 0; j < cols; j++) {
+                    const cellInput = document.createElement("input");
+                    cellInput.type = "number";
+                    cellInput.className = "matrix-cell";
+                    cellInput.id = `cell-${i}-${j}`;
+                    cellInput.placeholder = `a${i + 1}${j + 1}`;
+                    rowDiv.appendChild(cellInput);
+                }
+
+                matrixContainer.appendChild(rowDiv);
+            }
+        }
+
+        function calculate() {
+            const matrixSize = document.getElementById("matrixSize").value;
+            if (!matrixSize) {
+                alert("Please select a matrix size.");
+                return;
+            }
+
+            const [rows, cols] = matrixSize.split("x").map(Number);
+            const matrix = Array.from({ length: rows }, (_, i) => 
+                Array.from({ length: cols }, (_, j) =>
+                    parseFloat(document.getElementById(`cell-${i}-${j}`).value) || 0
+                )
+            );
+
+            try {
+                const numericMatrix = math.matrix(matrix);
+                const determinant = math.det(numericMatrix);
+                document.getElementById("determinant").innerText = determinant.toFixed(2);
+                document.getElementById("determinantSteps").innerHTML = calculateDeterminantSteps(matrix);
+
+                if (rows === cols) {
+                    if (determinant !== 0) {
+                        const inverseMatrix = math.inv(numericMatrix);
+                        document.getElementById("inverse").innerHTML = formatMatrix(inverseMatrix);
+                        document.getElementById("inverseSteps").innerHTML = calculateInverseSteps(matrix, inverseMatrix);
+                    } else {
+                        document.getElementById("inverse").innerText = "This matrix is singular and cannot be inverted.";
+                        document.getElementById("inverseSteps").innerText = "";
+                    }
+                } else {
+                    document.getElementById("inverse").innerText = "Only square matrices have inverses.";
+                    document.getElementById("inverseSteps").innerText = "";
+                }
+            } catch (error) {
+                clearResults();
+                document.getElementById("determinant").innerText = "Error in calculation.";
+            }
+        }
+
+        function formatMatrix(matrix) {
+            return matrix._data.map(row => row.map(val => `(${val.toFixed(2)})`).join(" ")).join("<br/>");
+        }
+
+        function clearResults() {
+            document.getElementById("inverse").innerText = "";
+            document.getElementById("determinantSteps").innerText = "";
+            document.getElementById("inverseSteps").innerText = "";
+        }
+
+        function calculateDeterminantSteps(matrix) {
+            const rows = matrix.length;
+            let steps = "";
+
+            if (rows === 1) {
+                steps = `Determinant of 1x1 matrix is the single element: (${matrix[0][0]})`;
+            } else if (rows === 2) {
+                const [a11, a12] = matrix[0];
+                const [a21, a22] = matrix[1];
+                const determinant = a11 * a22 - a12 * a21;
+                steps = `Determinant of 2x2 matrix:\n (a11 * a22) - (a12 * a21) = (${a11} * ${a22}) - (${a12} * ${a21}) = ${determinant}`;
+            } else if (rows === 3) {
+                const [a, b, c] = matrix[0];
+                const [d, e, f] = matrix[1];
+                const [g, h, i] = matrix[2];
+                const determinant = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+                steps = `Determinant of 3x3 matrix:\n` +
+                        `= a(ei - fh) - b(di - fg) + c(dh - eg)\n` +
+                        `= ${a}(${e}*${i} - ${f}*${h}) - ${b}(${d}*${i} - ${f}*${g}) + ${c}(${d}*${h} - ${e}*${g})\n` +
+                        `= ${determinant}`;
+            } else if (rows === 4) {
+                const [a, b, c, d] = matrix[0];
+                const determinant = a * calcMinor(matrix, 0, 0) - b * calcMinor(matrix, 0, 1) + c * calcMinor(matrix, 0, 2) - d * calcMinor(matrix, 0, 3);
+                steps = `Determinant of 4x4 matrix:\n` +
+                        `= a * M(0,0) - b * M(0,1) + c * M(0,2) - d * M(0,3)\n` +
+                        `= ${determinant}`;
+            }
+
+            return steps;
+        }
+
+        function calcMinor(matrix, row, col) {
+            const minor = matrix.map((r, i) => r.filter((_, j) => j !== col)).filter((_, i) => i !== row);
+            return math.det(math.matrix(minor));
+        }
+
+        function calculateInverseSteps(originalMatrix, inverseMatrix) {
+            const rows = originalMatrix.length;
+            let steps = "";
+
+            if (rows === 1) {
+                const a = originalMatrix[0][0];
+                steps = `Inverse of 1x1 matrix:\n` +
+                        `A = (${a})\n` +
+                        `A^(-1) = (1/A) = (1/${a})`;
+            } else if (rows === 2) {
+                const [a, b] = originalMatrix[0];
+                const [c, d] = originalMatrix[1];
+                const determinant = a * d - b * c;
+                steps = `Inverse of 2x2 matrix:\n` +
+                        `A = \\[ \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix} \\]\n` +
+                        `1. Compute the determinant: det(A) = ad - bc = ${determinant}\n` +
+                        `2. Compute the inverse:\n` +
+                        `A^(-1) = \\[ \\frac{1}{ad - bc} \\begin{pmatrix} d & -b \\\\ -c & a \\end{pmatrix} \\]\n` +
+                        `= \\[ \\frac{1}{${determinant}} \\begin{pmatrix} ${d} & ${-b} \\\\ ${-c} & ${a} \\end{pmatrix} \\]`;
+            } else if (rows === 3) {
+                const cofactorMatrix = getCofactorMatrix(originalMatrix);
+                const adjugateMatrix = math.transpose(cofactorMatrix);
+                const determinant = math.det(originalMatrix);
+                steps = `Inverse of 3x3 matrix:\n` +
+                        `1. Compute the determinant: ${calculateDeterminantSteps(originalMatrix)}\n` +
+                        `2. Compute the matrix of minors:\n` +
+                        `${formatMatrix(getMinorMatrix(originalMatrix))}\n` +
+                        `3. Compute the cofactor matrix:\n` +
+                        `${formatMatrix(cofactorMatrix)}\n` +
+                        `4. Compute the adjugate matrix (transpose of cofactor matrix):\n` +
+                        `${formatMatrix(adjugateMatrix)}\n` +
+                        `5. Inverse = (1/det) * adjugate\n` +
+                        `= (1/${determinant}) * ${formatMatrix(adjugateMatrix)}\n` +
+                        `= ${formatMatrix(math.multiply(1/determinant, adjugateMatrix))}`;
+            } else if (rows === 4) {
+                const cofactorMatrix = getCofactorMatrix(originalMatrix);
+                const adjugateMatrix = math.transpose(cofactorMatrix);
+                const determinant = math.det(originalMatrix);
+                steps = `Inverse of 4x4 matrix:\n` +
+                        `1. Compute the determinant: ${calculateDeterminantSteps(originalMatrix)}\n` +
+                        `2. Compute the matrix of minors:\n` +
+                        `${formatMatrix(getMinorMatrix(originalMatrix))}\n` +
+                        `3. Compute the cofactor matrix:\n` +
+                        `${formatMatrix(cofactorMatrix)}\n` +
+                        `4. Compute the adjugate matrix (transpose of cofactor matrix):\n` +
+                        `${formatMatrix(adjugateMatrix)}\n` +
+                        `5. Inverse = (1/det) * adjugate\n` +
+                        `= (1/${determinant}) * ${formatMatrix(adjugateMatrix)}\n` +
+                        `= ${formatMatrix(math.multiply(1/determinant, adjugateMatrix))}`;
+            }
+
+            return steps;
+        }
+
+        function getCofactorMatrix(matrix) {
+            const cofactors = [];
+            const size = matrix.length;
+
+            for (let i = 0; i < size; i++) {
+                const cofactorRow = [];
+                for (let j = 0; j < size; j++) {
+                    const minor = calcMinor(matrix, i, j);
+                    const cofactor = ((i + j) % 2 === 0 ? 1 : -1) * minor;
+                    cofactorRow.push(cofactor);
+                }
+                cofactors.push(cofactorRow);
+            }
+            return math.matrix(cofactors);
+        }
+
+        function getMinorMatrix(matrix) {
+            const minors = [];
+            const size = matrix.length;
+
+            for (let i = 0; i < size; i++) {
+                const minorRow = [];
+                for (let j = 0; j < size; j++) {
+                    const minor = calcMinor(matrix, i, j);
+                    minorRow.push(minor);
+                }
+                minors.push(minorRow);
+            }
+            return math.matrix(minors);
+        }
+    </script>
+</body>
+</html>
